@@ -21,7 +21,7 @@ PAGE_NO = 1
 
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Uploading...📤"
+    STATUS_UPLOADING = "Uploading...📮"
     STATUS_DOWNLOADING = "Downloading...📥"
     STATUS_CLONING = "Cloning...♻️"
     STATUS_WAITING = "Queued...💤"
@@ -106,8 +106,8 @@ def get_progress_bar_string(status):
     p = 0 if total == 0 else round(completed * 100 / total)
     p = min(max(p, 0), 100)
     cFull = p // 8
-    p_str = '■' * cFull
-    p_str += '□' * (12 - cFull)
+    p_str = '⬤' * cFull
+    p_str += '○' * (12 - cFull)
     p_str = f"[{p_str}]"
     return p_str
 
@@ -148,6 +148,7 @@ def get_readable_message():
                            f" | <b>Leechers:</b> {download.torrent_info().num_leechs}"
                 except:
                     pass
+                msg += f'\n<b>Requested By:</b> <a href="tg://user?id={download.message.from_user.id}">{download.message.from_user.first_name}</a>  [<code>{download.message.from_user.id}</code>]'
                 msg += f"\n<code>/{BotCommands.CancelMirror} {download.gid()}</code>"
             elif download.status() == MirrorStatus.STATUS_SEEDING:
                 msg += f"\n<b>Size: </b>{download.size()}"
@@ -179,10 +180,10 @@ def get_readable_message():
                     upspeed_bytes += float(spd.split('M')[0]) * 1048576
         bmsg += f"\n<b>DL:</b> {get_readable_file_size(dlspeed_bytes)}/s | <b>UL:</b> {get_readable_file_size(upspeed_bytes)}/s"
         if STATUS_LIMIT is not None and tasks > STATUS_LIMIT:
-            msg += f"<b>Page:</b> {PAGE_NO}/{pages} | <b>Tasks:</b> {tasks}\n"
+            msg += f"<b>📃Page:</b> {PAGE_NO}/{pages} | <b>Tasks:</b> {tasks}\n"
             buttons = ButtonMaker()
-            buttons.sbutton("Previous", "status pre")
-            buttons.sbutton("Next", "status nex")
+            buttons.sbutton("<=Previous", "status pre")
+            buttons.sbutton("Next=>", "status nex")
             button = InlineKeyboardMarkup(buttons.build_menu(2))
             return msg + bmsg, button
         return msg + bmsg, ""
